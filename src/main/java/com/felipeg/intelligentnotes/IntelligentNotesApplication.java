@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class IntelligentnotesApplication {
+public class IntelligentNotesApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(IntelligentnotesApplication.class, args);
+		SpringApplication.run(IntelligentNotesApplication.class, args);
 	}
 
 }
