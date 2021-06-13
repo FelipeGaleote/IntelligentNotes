@@ -1,7 +1,7 @@
 package com.felipeg.intelligentnotes.security;
 
-import com.felipeg.intelligentnotes.models.User;
-import com.felipeg.intelligentnotes.repositories.UserRepository;
+import com.felipeg.intelligentnotes.users.models.User;
+import com.felipeg.intelligentnotes.users.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

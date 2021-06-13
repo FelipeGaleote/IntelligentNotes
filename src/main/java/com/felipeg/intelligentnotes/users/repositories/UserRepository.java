@@ -1,6 +1,6 @@
-package com.felipeg.intelligentnotes.repositories;
+package com.felipeg.intelligentnotes.users.repositories;
 
-import com.felipeg.intelligentnotes.models.User;
+import com.felipeg.intelligentnotes.users.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
