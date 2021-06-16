@@ -29,6 +29,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private CustomLogoutSuccessHandler customLogoutSuccessHandler;
 
+    @Autowired
+    private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
@@ -40,7 +43,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .exceptionHandling().authenticationEntryPoint(this.customAuthenticationEntryPoint)
                 .and()
-                .formLogin().failureHandler(this.customAuthenticationFailureHandler).permitAll()
+                .formLogin().successHandler(this.customAuthenticationSuccessHandler).failureHandler(this.customAuthenticationFailureHandler).permitAll()
                 .and()
                 .logout().logoutSuccessHandler(this.customLogoutSuccessHandler).permitAll()
                 .and()
@@ -67,5 +70,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     CustomLogoutSuccessHandler customLogoutSuccessHandler() {
         return new CustomLogoutSuccessHandler();
+    }
+
+    @Bean
+    CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler() {
+        return new CustomAuthenticationSuccessHandler();
     }
 }
