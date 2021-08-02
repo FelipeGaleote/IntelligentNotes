@@ -1,11 +1,13 @@
 package com.felipeg.intelligentnotes.users.models;
 
+import com.felipeg.intelligentnotes.notes.models.Note;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "tb_user")
@@ -20,6 +22,8 @@ public class User implements UserDetails {
     private String email;
     @Column(nullable = false, length = 60)
     private String password;
+    @OneToMany(mappedBy = "user")
+    private List<Note> notes;
 
     public Long getId() {
         return id;
@@ -80,5 +84,11 @@ public class User implements UserDetails {
         return true;
     }
 
+    public List<Note> getNotes() {
+        return notes;
+    }
 
+    public void setNotes(List<Note> notes) {
+        this.notes = notes;
+    }
 }
