@@ -2,23 +2,26 @@ package com.felipeg.intelligentnotes.notes.dtos;
 
 import com.felipeg.intelligentnotes.notes.models.Note;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
-public class CreateNoteOutput {
+public class NoteOutput {
 
     private Long id;
     private String title;
     private String content;
     private String creationDate;
 
-    private CreateNoteOutput(Long id, String title, String content, String creationDate) {
+    private NoteOutput(Long id, String title, String content, String creationDate) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.creationDate = creationDate;
     }
 
-    private CreateNoteOutput() {
+    private NoteOutput() {
     }
 
     public Long getId() {
@@ -53,8 +56,16 @@ public class CreateNoteOutput {
         this.creationDate = creationDate;
     }
 
-    public static CreateNoteOutput from(Note note) {
+    public static NoteOutput from(Note note) {
         String formattedDate = ISO_OFFSET_DATE_TIME.format(note.getCreationDate());
-        return new CreateNoteOutput(note.getId(), note.getTitle(), note.getContent(), formattedDate);
+        return new NoteOutput(note.getId(), note.getTitle(), note.getContent(), formattedDate);
+    }
+
+    public static List<NoteOutput> from(List<Note> notes) {
+        List<NoteOutput> noteOutputs = new ArrayList<>();
+        for (Note note : notes) {
+            noteOutputs.add(NoteOutput.from(note));
+        }
+        return noteOutputs;
     }
 }
