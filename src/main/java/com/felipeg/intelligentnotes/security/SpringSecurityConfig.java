@@ -17,6 +17,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private static final String[] SWAGGER_AUTH_WHITELIST = {
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/swagger-ui.html",
+            "/api-docs/**",
+            "/swagger-ui/**"
+    };
+
     private final PasswordEncoder passwordEncoder;
     private final ImplementsUserDetailsService userDetailsService;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
@@ -42,6 +50,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/", "/home").permitAll()
+                .antMatchers(HttpMethod.GET, SWAGGER_AUTH_WHITELIST).permitAll()
                 .antMatchers(HttpMethod.POST, "/user").permitAll()
                 .antMatchers(HttpMethod.POST, "/user/login").permitAll()
                 .anyRequest().authenticated().and();
