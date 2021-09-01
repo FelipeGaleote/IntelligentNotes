@@ -9,6 +9,7 @@ import com.felipeg.intelligentnotes.users.models.User;
 import com.felipeg.intelligentnotes.users.repositories.UserRepository;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -40,7 +41,7 @@ public class UserController {
         this.jwtTokenUtil = jwtTokenUtil;
     }
 
-    @PostMapping("login")
+    @PostMapping(value = "login", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<LoginOutput> login(@RequestBody @Valid LoginInput request) {
 
         try {
@@ -57,7 +58,7 @@ public class UserController {
         }
     }
 
-    @PostMapping
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SignUpOutput> signUp(@RequestBody @Valid SignUpInput signUpInput) {
         var user = new User();
         user.setUsername(signUpInput.getUsername());

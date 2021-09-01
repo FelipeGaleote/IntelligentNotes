@@ -6,6 +6,7 @@ import com.felipeg.intelligentnotes.notes.models.Note;
 import com.felipeg.intelligentnotes.notes.repositories.NotesRepository;
 import com.felipeg.intelligentnotes.users.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ public class NotesController {
     @Autowired
     private NotesRepository notesRepository;
 
-    @PostMapping()
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<NoteOutput> createNote(@RequestBody @Valid CreateNoteInput createNoteInput, Principal principal) {
         var note = new Note(createNoteInput.getTitle(), createNoteInput.getContent(), getUser(principal));
         note = notesRepository.save(note);
@@ -33,7 +34,7 @@ public class NotesController {
         return (User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
     }
 
-    @GetMapping()
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<NoteOutput>> listUserNotes(Principal principal) {
         var user = getUser(principal);
         List<Note> userNotes = notesRepository.findByUser(user);
