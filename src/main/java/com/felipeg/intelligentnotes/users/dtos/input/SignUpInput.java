@@ -5,14 +5,13 @@ import javax.validation.constraints.*;
 public class SignUpInput {
 
     @NotBlank(message = "Username is mandatory.")
-    @Size(max = 60, message = "Username size should not exceed {max} characters.")
+    @Size(min = 1, max = 60, message = "Username should be between {min} and {max} characters.")
     private String username;
     @NotBlank(message = "Email is mandatory.")
     @Email(message = "The provided email address is invalid.")
     private String email;
     @NotBlank(message = "Password is mandatory.")
-    @Size(min = 6, message = "Password should have at least {min} characters.")
-    @Size(max = 100, message = "Password should not exceed {max} characters.")
+    @Size(min = 6, max = 100, message = "Password should be between {min} and {max} characters.")
     private String password;
 
     public String getUsername() {
