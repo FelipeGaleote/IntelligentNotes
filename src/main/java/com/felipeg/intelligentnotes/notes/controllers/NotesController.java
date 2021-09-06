@@ -6,6 +6,7 @@ import com.felipeg.intelligentnotes.notes.models.Note;
 import com.felipeg.intelligentnotes.notes.repositories.NotesRepository;
 import com.felipeg.intelligentnotes.users.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,7 +28,7 @@ public class NotesController {
         var note = new Note(createNoteInput.getTitle(), createNoteInput.getContent(), getUser(principal));
         note = notesRepository.save(note);
         var output = NoteOutput.from(note);
-        return ResponseEntity.ok(output);
+        return ResponseEntity.status(HttpStatus.CREATED).body(output);
     }
 
     private User getUser(Principal principal) {
