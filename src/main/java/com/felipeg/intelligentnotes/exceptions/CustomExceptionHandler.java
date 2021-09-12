@@ -1,7 +1,6 @@
 package com.felipeg.intelligentnotes.exceptions;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,22 +13,22 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 @ControllerAdvice
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 public class CustomExceptionHandler {
 
-    private static final Logger logger = LogManager.getLogger(CustomExceptionHandler.class);
+    private static final ErrorLogger errorLogger = ErrorLogger.createLogger(CustomExceptionHandler.class);
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @Hidden
     protected ResponseEntity<ErrorResponse> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
-        var errorId = newErrorId();
-        var httpStatus = HttpStatus.BAD_REQUEST;
-
         List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
         String errorMessage = createFieldErrorsMessage(fieldErrors);
+        var errorId = errorLogger.logError(errorMessage, ex);
+        var httpStatus = HttpStatus.BAD_REQUEST;
+
 
         var responseBuilder = new ErrorResponseBuilder();
         var errorResponse = responseBuilder
@@ -39,35 +38,7 @@ public class CustomExceptionHandler {
                 .setErrorId(errorId)
                 .createErrorResponse();
 
-        logError(errorId, errorMessage, ex);
         return new ResponseEntity<>(errorResponse, httpStatus);
-    }
-
-    @ExceptionHandler(Throwable.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    protected ResponseEntity<ErrorResponse> handleGenericError(Throwable ex) {
-        var errorId = newErrorId();
-        var httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-        String errorMessage = ex.getMessage() == null ? "An internal error occurred" : ex.getMessage();
-
-        var responseBuilder = new ErrorResponseBuilder();
-        var errorResponse = responseBuilder
-                .setTimestamp(new Date())
-                .setError(httpStatus.getReasonPhrase())
-                .setMessage(errorMessage)
-                .setErrorId(errorId)
-                .createErrorResponse();
-
-        logError(errorId, errorMessage, ex);
-        return new ResponseEntity<>(errorResponse, httpStatus);
-    }
-
-    private String newErrorId() {
-        return UUID.randomUUID().toString();
-    }
-
-    private void logError(String errorId, String message, Throwable throwable) {
-        logger.error(() -> String.format("Error Id: %s - %s", errorId, message), throwable);
     }
 
     private String createFieldErrorsMessage(List<FieldError> fieldErrors) {
