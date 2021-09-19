@@ -8,6 +8,9 @@ public class SignUpOutput {
         this.userId = userId;
     }
 
+    public SignUpOutput() {
+    }
+
     public Long getUserId() {
         return userId;
     }
