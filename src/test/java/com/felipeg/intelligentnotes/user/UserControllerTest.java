@@ -10,8 +10,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.util.Objects;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -40,6 +44,17 @@ public class UserControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errorId").isNotEmpty())
                 .andExpect(jsonPath("$.message").value("Password should be between 6 and 100 characters."));
+    }
+
+    @Test
+    public void testSignUpWithUsernameAlreadyInUse() throws Exception {
+        signUp(authenticationTestsHelper.createDefaultSignUpInput());
+        MvcResult mvcResult = signUp(authenticationTestsHelper.createDefaultSignUpInput())
+                .andExpect(status().isBadRequest())
+                .andReturn();
+        Exception exception = Objects.requireNonNull(mvcResult
+                .getResolvedException(), "Should be exception related to username already being in use");
+        assertEquals("400 BAD_REQUEST \"Username is already in use.\"", exception.getMessage());
     }
 
     @Test
