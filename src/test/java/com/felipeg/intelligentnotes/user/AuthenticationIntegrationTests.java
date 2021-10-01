@@ -1,4 +1,4 @@
-package com.felipeg.intelligentnotes.authentication;
+package com.felipeg.intelligentnotes.user;
 
 import com.felipeg.intelligentnotes.users.dtos.input.LoginInput;
 import com.felipeg.intelligentnotes.users.dtos.input.SignUpInput;
@@ -13,26 +13,24 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 
+import static com.felipeg.intelligentnotes.user.AuthenticationTestsHelper.STANDARD_USERNAME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class AuthenticationIntegrationTests {
 
-    private static final String STANDARD_USERNAME = "felipe";
-    private static final String STANDARD_PASSWORD = "111111";
-    private static final String STANDARD_EMAIL = "felipe@teste.com";
 
     @Autowired
     private TestRestTemplate restTemplate;
 
+    @Autowired
+    private AuthenticationTestsHelper authenticationTestsHelper;
+
     @Test
     public void testValidLogin() {
         doStandardSignup();
-
-        LoginInput loginInput = new LoginInput();
-        loginInput.setUsername(STANDARD_USERNAME);
-        loginInput.setPassword(STANDARD_PASSWORD);
+        LoginInput loginInput = authenticationTestsHelper.createDefaultLoginInput();
 
         ResponseEntity<LoginOutput> response = restTemplate.postForEntity("/user/login", loginInput, LoginOutput.class);
         LoginOutput responseBody = response.getBody();
@@ -57,11 +55,7 @@ public class AuthenticationIntegrationTests {
     }
 
     private ResponseEntity<SignUpOutput> doStandardSignup() {
-        SignUpInput signUpInput = new SignUpInput();
-        signUpInput.setUsername(STANDARD_USERNAME);
-        signUpInput.setPassword(STANDARD_PASSWORD);
-        signUpInput.setEmail(STANDARD_EMAIL);
-
+        SignUpInput signUpInput = authenticationTestsHelper.createDefaultSignUpInput();
         return restTemplate.postForEntity("/user", signUpInput, SignUpOutput.class);
     }
 
