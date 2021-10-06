@@ -1,4 +1,4 @@
-package com.felipeg.intelligentnotes.exceptions;
+package com.felipeg.intelligentnotes.error_handling;
 
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;

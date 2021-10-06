@@ -1,4 +1,4 @@
-package com.felipeg.intelligentnotes.exceptions;
+package com.felipeg.intelligentnotes.error_handling;
 
 import java.util.Date;
 

@@ -1,4 +1,4 @@
-package com.felipeg.intelligentnotes.exceptions;
+package com.felipeg.intelligentnotes.error_handling;
 
 import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.http.HttpStatus;

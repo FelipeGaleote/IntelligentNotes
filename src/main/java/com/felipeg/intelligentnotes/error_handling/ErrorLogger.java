@@ -1,4 +1,4 @@
-package com.felipeg.intelligentnotes.exceptions;
+package com.felipeg.intelligentnotes.error_handling;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

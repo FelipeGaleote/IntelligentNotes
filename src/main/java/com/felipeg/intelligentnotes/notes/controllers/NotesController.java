@@ -1,6 +1,6 @@
 package com.felipeg.intelligentnotes.notes.controllers;
 
-import com.felipeg.intelligentnotes.exceptions.ErrorResponse;
+import com.felipeg.intelligentnotes.error_handling.ErrorResponse;
 import com.felipeg.intelligentnotes.notes.dtos.CreateNoteInput;
 import com.felipeg.intelligentnotes.notes.dtos.NoteOutput;
 import com.felipeg.intelligentnotes.notes.models.Note;
