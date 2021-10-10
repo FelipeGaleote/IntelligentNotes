@@ -1,22 +1,19 @@
 package com.felipeg.intelligentnotes.notes.controllers;
 
 import com.felipeg.intelligentnotes.error_handling.ErrorResponse;
+import com.felipeg.intelligentnotes.notes.NotesService;
 import com.felipeg.intelligentnotes.notes.dtos.CreateNoteInput;
 import com.felipeg.intelligentnotes.notes.dtos.NoteOutput;
 import com.felipeg.intelligentnotes.notes.models.Note;
-import com.felipeg.intelligentnotes.notes.repositories.NotesRepository;
-import com.felipeg.intelligentnotes.users.models.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -27,8 +24,11 @@ import java.util.List;
 @RequestMapping("notes")
 public class NotesController {
 
-    @Autowired
-    private NotesRepository notesRepository;
+    private final NotesService notesService;
+
+    public NotesController(NotesService notesService) {
+        this.notesService = notesService;
+    }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Create a new note for the logged in user")
@@ -47,14 +47,9 @@ public class NotesController {
                     })
     })
     public ResponseEntity<NoteOutput> createNote(@RequestBody @Valid CreateNoteInput createNoteInput, Principal principal) {
-        var note = new Note(createNoteInput.getTitle(), createNoteInput.getContent(), getUser(principal));
-        note = notesRepository.save(note);
+        var note = notesService.createNote(createNoteInput.getTitle(), createNoteInput.getContent(), principal);
         var output = NoteOutput.from(note);
         return ResponseEntity.status(HttpStatus.CREATED).body(output);
-    }
-
-    private User getUser(Principal principal) {
-        return (User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -74,8 +69,7 @@ public class NotesController {
                     })
     })
     public ResponseEntity<List<NoteOutput>> listUserNotes(Principal principal) {
-        var user = getUser(principal);
-        List<Note> userNotes = notesRepository.findByUser(user);
+        List<Note> userNotes = notesService.listUserNotes(principal);
         List<NoteOutput> userNotesOutput = NoteOutput.from(userNotes);
         return ResponseEntity.ok(userNotesOutput);
     }
