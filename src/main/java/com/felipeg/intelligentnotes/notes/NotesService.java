@@ -3,11 +3,12 @@ package com.felipeg.intelligentnotes.notes;
 import com.felipeg.intelligentnotes.notes.models.Note;
 import com.felipeg.intelligentnotes.notes.repositories.NotesRepository;
 import com.felipeg.intelligentnotes.users.models.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
-import java.util.List;
 
 @Service
 public class NotesService {
@@ -24,9 +25,9 @@ public class NotesService {
         return notesRepository.save(note);
     }
 
-    public List<Note> listUserNotes(Principal principal) {
+    public Page<Note> listUserNotes(Principal principal, Pageable pageable) {
         var user = getUserFrom(principal);
-        return notesRepository.findByUser(user);
+        return notesRepository.findByUser(user, pageable);
     }
 
     private User getUserFrom(Principal principal) {

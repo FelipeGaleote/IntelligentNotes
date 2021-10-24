@@ -1,9 +1,7 @@
 package com.felipeg.intelligentnotes.notes.dtos;
 
 import com.felipeg.intelligentnotes.notes.models.Note;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.springframework.data.domain.Page;
 
 import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
@@ -56,16 +54,12 @@ public class NoteOutput {
         this.creationDate = creationDate;
     }
 
-    public static NoteOutput from(Note note) {
+    public static NoteOutput fromNote(Note note) {
         String formattedDate = ISO_OFFSET_DATE_TIME.format(note.getCreationDate());
         return new NoteOutput(note.getId(), note.getTitle(), note.getContent(), formattedDate);
     }
 
-    public static List<NoteOutput> from(List<Note> notes) {
-        List<NoteOutput> noteOutputs = new ArrayList<>();
-        for (Note note : notes) {
-            noteOutputs.add(NoteOutput.from(note));
-        }
-        return noteOutputs;
+    public static Page<NoteOutput> fromNotes(Page<Note> notes) {
+        return notes.map(NoteOutput::fromNote);
     }
 }

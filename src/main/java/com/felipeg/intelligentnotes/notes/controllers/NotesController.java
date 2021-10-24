@@ -11,6 +11,10 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
-import java.util.List;
 
 @RestController()
 @RequestMapping("notes")
@@ -48,12 +51,12 @@ public class NotesController {
     })
     public ResponseEntity<NoteOutput> createNote(@RequestBody @Valid CreateNoteInput createNoteInput, Principal principal) {
         var note = notesService.createNote(createNoteInput.getTitle(), createNoteInput.getContent(), principal);
-        var output = NoteOutput.from(note);
+        var output = NoteOutput.fromNote(note);
         return ResponseEntity.status(HttpStatus.CREATED).body(output);
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "List the notes of the logged in user")
+    @Operation(summary = "List the notes of the logged in user. The response is paginated and supports sorting, these settings can be defined using URL parameters.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Listed notes",
                     content = {
@@ -68,9 +71,9 @@ public class NotesController {
                             @Content(schema = @Schema(hidden = true))
                     })
     })
-    public ResponseEntity<List<NoteOutput>> listUserNotes(Principal principal) {
-        List<Note> userNotes = notesService.listUserNotes(principal);
-        List<NoteOutput> userNotesOutput = NoteOutput.from(userNotes);
+    public ResponseEntity<Page<NoteOutput>> listUserNotes(Principal principal, @PageableDefault(size = 15, sort = "id", direction = Sort.Direction.DESC)  Pageable pageable) {
+        Page<Note> userNotes = notesService.listUserNotes(principal, pageable);
+        Page<NoteOutput> userNotesOutput = NoteOutput.fromNotes(userNotes);
         return ResponseEntity.ok(userNotesOutput);
     }
 }
