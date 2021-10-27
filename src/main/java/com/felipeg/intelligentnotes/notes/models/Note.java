@@ -3,12 +3,10 @@ package com.felipeg.intelligentnotes.notes.models;
 import com.felipeg.intelligentnotes.users.models.User;
 
 import javax.persistence.*;
-import java.sql.Date;
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.time.OffsetDateTime;
 
 @Entity
+@Table(name = "note")
 public class Note {
 
     @Id
