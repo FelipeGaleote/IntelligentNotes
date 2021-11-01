@@ -58,10 +58,7 @@ public class NotesController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "List the notes of the logged in user. The response is paginated and supports sorting, these settings can be defined using URL parameters.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Listed notes",
-                    content = {
-                            @Content(array = @ArraySchema(schema = @Schema(implementation = NoteOutput.class)))
-                    }),
+            @ApiResponse(responseCode = "200", description = "Listed notes"),
             @ApiResponse(responseCode = "400", description = "Bad request",
                     content = {
                             @Content(schema = @Schema(implementation = ErrorResponse.class))
