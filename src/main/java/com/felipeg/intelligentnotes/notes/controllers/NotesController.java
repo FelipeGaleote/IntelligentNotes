@@ -1,12 +1,13 @@
 package com.felipeg.intelligentnotes.notes.controllers;
 
+import com.felipeg.intelligentnotes.common.ApiPageable;
 import com.felipeg.intelligentnotes.error_handling.ErrorResponse;
 import com.felipeg.intelligentnotes.notes.NotesService;
 import com.felipeg.intelligentnotes.notes.dtos.CreateNoteInput;
 import com.felipeg.intelligentnotes.notes.dtos.NoteOutput;
 import com.felipeg.intelligentnotes.notes.models.Note;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -68,7 +69,8 @@ public class NotesController {
                             @Content(schema = @Schema(hidden = true))
                     })
     })
-    public ResponseEntity<Page<NoteOutput>> listUserNotes(Principal principal, @PageableDefault(size = 15, sort = "id", direction = Sort.Direction.DESC)  Pageable pageable) {
+    @ApiPageable
+    public ResponseEntity<Page<NoteOutput>> listUserNotes(Principal principal, @Parameter(hidden = true) @PageableDefault(size = 15, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<Note> userNotes = notesService.listUserNotes(principal, pageable);
         Page<NoteOutput> userNotesOutput = NoteOutput.fromNotes(userNotes);
         return ResponseEntity.ok(userNotesOutput);
