@@ -1,4 +1,4 @@
-package com.felipeg.intelligentnotes.notes;
+package com.felipeg.intelligentnotes.notes.services;
 
 import com.felipeg.intelligentnotes.notes.models.Note;
 import com.felipeg.intelligentnotes.notes.repositories.NotesRepository;
