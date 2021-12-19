@@ -79,9 +79,7 @@ public class UserControllerTest {
         SignUpInput signUpInput = authenticationTestsHelper.createDefaultSignUpInput();
         signUp(signUpInput);
 
-        LoginInput loginInput = new LoginInput();
-        loginInput.setUsername(AuthenticationTestsHelper.STANDARD_USERNAME);
-        loginInput.setPassword("wrong_password");
+        LoginInput loginInput = authenticationTestsHelper.createLoginInputWithWrongPassword();
         login(loginInput)
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$").doesNotExist())

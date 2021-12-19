@@ -11,6 +11,7 @@ public class AuthenticationTestsHelper {
     public static final String STANDARD_PASSWORD = "111111";
     public static final String STANDARD_EMAIL = "felipe@teste.com";
     private static final String INVALID_PASSWORD = "111";
+    public static final String WRONG_PASSWORD = "wrong_password";
 
     public SignUpInput createDefaultSignUpInput() {
         SignUpInput signUpInput = new SignUpInput();
@@ -42,5 +43,11 @@ public class AuthenticationTestsHelper {
         return loginInput;
     }
 
+    public LoginInput createLoginInputWithWrongPassword() {
+        LoginInput loginInput = new LoginInput();
+        loginInput.setUsername(AuthenticationTestsHelper.STANDARD_USERNAME);
+        loginInput.setPassword(WRONG_PASSWORD);
+        return loginInput;
+    }
 
 }
