@@ -33,14 +33,16 @@ public class UserControllerTest {
 
     @Test
     public void testSignUpWithSuccess() throws Exception {
-        signUp(authenticationTestsHelper.createDefaultSignUpInput())
+        SignUpInput signUpInput = authenticationTestsHelper.createDefaultSignUpInput();
+        signUp(signUpInput)
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.userId").value(1L));
     }
 
     @Test
     public void testSignUpWithInvalidPasswordLength() throws Exception {
-        signUp(authenticationTestsHelper.createSignUpInputWithInvalidPasswordLength())
+        SignUpInput inputWithInvalidPasswordLength = authenticationTestsHelper.createSignUpInputWithInvalidPasswordLength();
+        signUp(inputWithInvalidPasswordLength)
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errorId").isNotEmpty())
                 .andExpect(jsonPath("$.message").value("Password should be between 6 and 100 characters."));
@@ -48,8 +50,9 @@ public class UserControllerTest {
 
     @Test
     public void testSignUpWithUsernameAlreadyInUse() throws Exception {
-        signUp(authenticationTestsHelper.createDefaultSignUpInput());
-        MvcResult mvcResult = signUp(authenticationTestsHelper.createDefaultSignUpInput())
+        SignUpInput signUpInput = authenticationTestsHelper.createDefaultSignUpInput();
+        signUp(signUpInput);
+        MvcResult mvcResult = signUp(signUpInput)
                 .andExpect(status().isBadRequest())
                 .andReturn();
         Exception exception = Objects.requireNonNull(mvcResult
@@ -59,9 +62,11 @@ public class UserControllerTest {
 
     @Test
     public void testLoginWithSuccess() throws Exception {
-        signUp(authenticationTestsHelper.createDefaultSignUpInput());
+        SignUpInput signUpInput = authenticationTestsHelper.createDefaultSignUpInput();
+        signUp(signUpInput);
 
-        login(authenticationTestsHelper.createDefaultLoginInput())
+        LoginInput loginInput = authenticationTestsHelper.createDefaultLoginInput();
+        login(loginInput)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.username").value(AuthenticationTestsHelper.STANDARD_USERNAME))
@@ -71,7 +76,8 @@ public class UserControllerTest {
 
     @Test
     public void testLoginWithWrongPassword() throws Exception {
-        signUp(authenticationTestsHelper.createDefaultSignUpInput());
+        SignUpInput signUpInput = authenticationTestsHelper.createDefaultSignUpInput();
+        signUp(signUpInput);
 
         LoginInput loginInput = new LoginInput();
         loginInput.setUsername(AuthenticationTestsHelper.STANDARD_USERNAME);
@@ -84,9 +90,11 @@ public class UserControllerTest {
 
     @Test
     public void testLoginWithInvalidPasswordLength() throws Exception {
-        signUp(authenticationTestsHelper.createDefaultSignUpInput());
+        SignUpInput signUpInput = authenticationTestsHelper.createDefaultSignUpInput();
+        signUp(signUpInput);
 
-        login(authenticationTestsHelper.createLoginInputWithInvalidPasswordLength())
+        LoginInput loginInputWithInvalidPasswordLength = authenticationTestsHelper.createLoginInputWithInvalidPasswordLength();
+        login(loginInputWithInvalidPasswordLength)
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errorId").isNotEmpty())
                 .andExpect(jsonPath("$.message").value("Password should be between 6 and 100 characters."));
